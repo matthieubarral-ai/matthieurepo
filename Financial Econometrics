@@ -1,0 +1,26 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Charger les données
+de = pd.read_csv("germany_no2_monthly.csv")  # moyenne mensuelle
+fr = pd.read_csv("france_no2_monthly.csv")
+
+# Fusionner par mois
+df = pd.merge(de, fr, on="month", suffixes=("_DE", "_FR"))
+
+# Convertir la colonne "month" en datetime
+df["month"] = pd.to_datetime(df["month"])
+
+plt.figure(figsize=(10,6))
+plt.plot(df["month"], df["NO2_DE"], label="Germany")
+plt.plot(df["month"], df["NO2_FR"], label="France")
+
+# Marquer juin 2022
+plt.axvline(pd.to_datetime("2022-06-01"), color="red", linestyle="--")
+plt.text(pd.to_datetime("2022-06-01"), max(df[["NO2_DE","NO2_FR"]].max()), "€9 ticket begins", color="red")
+
+plt.title("Monthly NO₂ levels in Germany and France")
+plt.xlabel("Month")
+plt.ylabel("NO₂ (μg/m³)")
+plt.legend()
+plt.show()
